@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, FormControl, MenuItem, Select, Typography, TextField, Grid2, Pagination, Stack } from '@mui/material';
 import PropTypes from 'prop-types';
 import { AVAILABLE_LANGUAGES, ROWS_PER_PAGE_OPTIONS } from '../../utils/constant';
@@ -6,6 +6,7 @@ import { CustomBox } from '../../styles/Dashboard.styled';
 import { DatePicker } from '@mui/x-date-pickers';
 import CardElement from '../common/CardElement';
 import LoadingContent from '../common/LoadingContent';
+import { useInView } from 'react-intersection-observer';
 
 /**
  * DashboardContent Component
@@ -26,6 +27,16 @@ const DashboardContent = ({
   setRowsPerPage,
   isLoading,
 }) => {
+  const { ref: loadMoreRef, inView } = useInView({
+    threshold: 1.0,
+  });
+
+  useEffect(() => {
+    if (inView && !isLoading) {
+      setRowsPerPage(rowsPerPage + 5);
+    }
+  }, [inView, isLoading]);
+
   const renderLanguageOptions = () =>
     AVAILABLE_LANGUAGES.map((lang) => (
       <MenuItem key={lang.id} value={lang.code}>
@@ -178,6 +189,7 @@ const DashboardContent = ({
                   </Grid2>
                 )}
               </Grid2>
+              <div ref={loadMoreRef} />
             </CustomBox>
           </Grid2>
         </Grid2>
