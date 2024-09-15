@@ -5,8 +5,10 @@ export const CustomBox = styled(Box)`
   border-radius: 5px;
   background-color: #f5f5f5;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  min-width: 1500px;
+  min-width: auto;
+
   @media (max-width: 768px) {
     padding: 10px;
+    min-width: auto;
   }
 `;

@@ -97,9 +97,17 @@ const DashboardContent = ({
       {isLoading ? (
         <LoadingContent />
       ) : (
-        <Grid2 container spacing={2}>
+        <Grid2 container spacing={2} display='flex' flexDirection='column'>
           <Grid2 item xs={12} md={8}>
-            <CustomBox container display='flex' flexDirection='row' justifyContent='center' p={2}>
+            <CustomBox
+              container
+              display='flex'
+              justifyContent='center'
+              p={2}
+              xs={12}
+              md={12}
+              sx={{ flexDirection: { xs: 'column', md: 'row' } }}
+            >
               <Grid2 item xs={12} m={10}>
                 <Typography variant='h4' align='center'>
                   {"Today's Featured Article"}
@@ -118,7 +126,7 @@ const DashboardContent = ({
               </Grid2>
             </CustomBox>
           </Grid2>
-          <Grid2 item xs={12} md={4}>
+          <Grid2 item xs={12} md={4} display='flex' justifyContent='center'>
             <CustomBox container display='flex' flexDirection='column' p={2}>
               <Grid2 item xs={12}>
                 <Typography variant='h4' align='center'>
