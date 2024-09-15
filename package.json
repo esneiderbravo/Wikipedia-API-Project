@@ -1,6 +1,5 @@
 {
   "name": "full-stack-test",
-  "homepage": "https://esneiderbravo.github.io/full-stack-test",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -33,9 +32,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "prettier": "prettier src/**/*.js --write . --config .prettierrc",
-    "lint": "eslint  --fix src/**/*.js",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "lint": "eslint  --fix src/**/*.js"
   },
   "eslintConfig": {
     "extends": [
