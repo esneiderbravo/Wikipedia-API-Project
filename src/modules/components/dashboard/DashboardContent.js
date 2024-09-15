@@ -120,28 +120,30 @@ const DashboardContent = (props) => {
           </Grid2>
         </Grid2>
       </CustomBox>
-      <CustomBox container display='flex' flexDirection='column' alignItems='center' p={2}>
-        <Grid2 container spacing={2} justifyContent='center'>
-          <Grid2 item xs={12}>
-            <Typography variant='h4' align='center'>
-              {"Today's featured article"}
-            </Typography>
+      <CustomBox container display='flex' flexDirection='row' justifyContent='center' p={2}>
+        <Grid2 item display='flex' flexDirection='column' alignItems='center' p={2}>
+          <Grid2 container spacing={2} justifyContent='center'>
+            <Grid2 item xs={12}>
+              <Typography variant='h4' align='center'>
+                {"Today's featured article"}
+              </Typography>
+            </Grid2>
+          </Grid2>
+          <Grid2 container spacing={2} justifyContent='center' mt={5}>
+            {renderTodayFeaturedArticle()}
           </Grid2>
         </Grid2>
-        <Grid2 container spacing={2} justifyContent='center' mt={5}>
-          {renderTodayFeaturedArticle()}
-        </Grid2>
-      </CustomBox>
-      <CustomBox container display='flex' flexDirection='column' alignItems='center' p={2}>
-        <Grid2 container spacing={2} justifyContent='center'>
-          <Grid2 item xs={12}>
-            <Typography variant='h4' align='center'>
-              {'Daily featured image from Wikimedia Commons'}
-            </Typography>
+        <Grid2 item display='flex' flexDirection='column' alignItems='center' p={2}>
+          <Grid2 container spacing={2} justifyContent='center'>
+            <Grid2 item xs={12}>
+              <Typography variant='h4' align='center'>
+                {'Daily featured image'}
+              </Typography>
+            </Grid2>
           </Grid2>
-        </Grid2>
-        <Grid2 container spacing={2} justifyContent='center' mt={5}>
-          {renderDailyFeaturedImage()}
+          <Grid2 container spacing={2} justifyContent='center' mt={5}>
+            {renderDailyFeaturedImage()}
+          </Grid2>
         </Grid2>
       </CustomBox>
       <CustomBox container display='flex' flexDirection='column' alignItems='center' p={2}>
