@@ -168,7 +168,10 @@ const DashboardContent = (props) => {
                   labelId='language-select-label'
                   id='language-select'
                   value={rowsPerPage}
-                  onChange={(event) => setRowsPerPage(event.target.value)}
+                  onChange={(event) => {
+                    setRowsPerPage(event.target.value);
+                    setPage(1);
+                  }}
                   inputProps={{ 'aria-label': 'Cards per Page' }}
                 >
                   <MenuItem value={5}>5</MenuItem>
