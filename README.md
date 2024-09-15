@@ -1,7 +1,3 @@
-Here's an improved README with a section for the deployed app link:
-
----
-
 # Full Stack Test
 
 ## Overview
@@ -185,7 +181,3 @@ Feel free to fork the repository, make changes, and submit a pull request. Pleas
 ## Contact
 
 For any questions or issues, please contact [esneiderbravoyb@gmail.com](mailto:esneiderbravoyb@gmail.com).
-
----
-
-Feel free to adjust the link and other details according to your project's needs!
