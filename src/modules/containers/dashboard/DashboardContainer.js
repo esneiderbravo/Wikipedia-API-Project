@@ -12,7 +12,7 @@ import { setNotification } from '../../actions/state';
  * @return React.JSX.Element
  */
 const DashboardContainer = () => {
-  const [dispatch] = useContext(AppContext);
+  const [, dispatch] = useContext(AppContext);
   const [language, setLanguage] = useState('en');
   const [dateSelected, setDateSelected] = useState(dayjs(new Date()));
   const [data, setData] = useState({});
@@ -28,7 +28,8 @@ const DashboardContainer = () => {
       setDailyFeaturedImage(data?.image);
       const start = (page - 1) * rowsPerPage;
       const end = page * rowsPerPage;
-      const previousArticledPaginated = data?.mostread?.articles.slice(start, end);
+      const limit = data?.mostread?.articles.length;
+      const previousArticledPaginated = data?.mostread?.articles.slice(start, end <= limit ? end : limit);
       setPreviousDaysMostReadArticles({ articles: previousArticledPaginated, count: data?.mostread?.articles.length });
     }
   }, [data, page, rowsPerPage]);
@@ -41,6 +42,12 @@ const DashboardContainer = () => {
       const [data, status] = await getFeaturedContent(language, dateSelected.format('YYYY/MM/DD'));
       if (status === 200) {
         setData(data);
+        dispatch(
+          setNotification({
+            type: 'success',
+            info: 'Data found with success!',
+          }),
+        );
       } else {
         dispatch(
           setNotification({

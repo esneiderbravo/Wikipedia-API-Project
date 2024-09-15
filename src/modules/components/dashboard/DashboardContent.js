@@ -54,7 +54,7 @@ const DashboardContent = (props) => {
     if (dailyFeaturedImage) {
       return <CardElement element={dailyFeaturedImage} properties={['title', 'thumbnail', 'description.text', 'full-image']} />;
     }
-    return <Typography variant='subtitle1'>No featured content available today.</Typography>;
+    return <Typography variant='subtitle1'>No featured image available today.</Typography>;
   };
 
   /**
@@ -155,17 +155,38 @@ const DashboardContent = (props) => {
         <Grid2 container spacing={2} justifyContent='center' mt={5}>
           {renderPreviousDaysMostReadArticles()}
         </Grid2>
-        <Grid2 container spacing={2} justifyContent='center' mt={5}>
-          <Stack>
-            <Pagination
-              count={previousDaysMostReadArticles?.count > 0 ? parseInt(previousDaysMostReadArticles.count / rowsPerPage) : 0}
-              page={page}
-              onChange={(event, value) => {
-                setPage(value);
-              }}
-            />
-          </Stack>
-        </Grid2>
+        {previousDaysMostReadArticles?.count > 0 ? (
+          <Grid2 container spacing={2} justifyContent='center' mt={5}>
+            <Grid2 item xs={12} sm={6} md={4}>
+              <FormControl fullWidth size='small' sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                <Typography variant='subtitle1' sx={{ marginRight: '10px' }}>
+                  Cards per Page:
+                </Typography>
+                <Select
+                  labelId='language-select-label'
+                  id='language-select'
+                  value={rowsPerPage}
+                  onChange={(event) => setRowsPerPage(event.target.value)}
+                  inputProps={{ 'aria-label': 'Cards per Page' }}
+                >
+                  <MenuItem value={5}>5</MenuItem>
+                  <MenuItem value={10}>10</MenuItem>
+                  <MenuItem value={15}>15</MenuItem>
+                  <MenuItem value={20}>20</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid2>
+            <Stack>
+              <Pagination
+                count={previousDaysMostReadArticles?.count > 0 ? Math.ceil(previousDaysMostReadArticles.count / rowsPerPage) : 0}
+                page={page}
+                onChange={(event, value) => {
+                  setPage(value);
+                }}
+              />
+            </Stack>
+          </Grid2>
+        ) : null}
       </CustomBox>
     </>
   );
@@ -177,9 +198,9 @@ DashboardContent.propTypes = {
   dateSelected: PropTypes.object.isRequired,
   setDateSelected: PropTypes.func.isRequired,
   handleSearch: PropTypes.func.isRequired,
-  todayFeaturedArticle: PropTypes.object.isRequired,
-  previousDaysMostReadArticles: PropTypes.array.isRequired,
-  dailyFeaturedImage: PropTypes.object.isRequired,
+  todayFeaturedArticle: PropTypes.object,
+  previousDaysMostReadArticles: PropTypes.object,
+  dailyFeaturedImage: PropTypes.object,
   page: PropTypes.number.isRequired,
   setPage: PropTypes.func.isRequired,
   rowsPerPage: PropTypes.number.isRequired,

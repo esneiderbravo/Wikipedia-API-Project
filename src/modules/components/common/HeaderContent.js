@@ -1,6 +1,7 @@
 import React from 'react';
-import { Grid } from '@mui/material';
+import { Grid2 } from '@mui/material';
 import NotificationContent from '../notification/NotificationContent';
+import { CustomBox } from '../../styles/Dashboard.styled';
 
 /**
  * Header Content Component
@@ -8,11 +9,11 @@ import NotificationContent from '../notification/NotificationContent';
  */
 const HeaderContent = () => {
   return (
-    <Grid container spacing={2} justifyContent='center' position='fixed'>
-      <Grid item xs={12} md={8} display='flex' justifyContent='center'>
+    <CustomBox container display='flex' flexDirection='column' alignItems='center' p={2}>
+      <Grid2 item xs={12} md={8} display='flex' justifyContent='center'>
         <NotificationContent />
-      </Grid>
-    </Grid>
+      </Grid2>
+    </CustomBox>
   );
 };
 
