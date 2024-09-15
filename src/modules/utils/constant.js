@@ -17,5 +17,5 @@ export const AVAILABLE_LANGUAGES = [
   { id: '94ddc187-5480-4374-876b-e1a1cf11d009', label: 'Swedish', code: 'sv' },
   { id: 'fb9140f5-02c7-46c2-97b7-df17f1f650e7', label: 'Vietnamese', code: 'vi' },
 ];
-
 export const WIKIPEDIA_API = 'https://api.wikimedia.org';
+export const ROWS_PER_PAGE_OPTIONS = [5, 10, 15, 20];

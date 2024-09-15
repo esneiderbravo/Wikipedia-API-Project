@@ -1,80 +1,67 @@
 import React from 'react';
-import { Button, FormControl, MenuItem, Select, Typography, TextField, Grid2, Pagination } from '@mui/material';
+import { Button, FormControl, MenuItem, Select, Typography, TextField, Grid2, Pagination, Stack } from '@mui/material';
 import PropTypes from 'prop-types';
-import { AVAILABLE_LANGUAGES } from '../../utils/constant';
+import { AVAILABLE_LANGUAGES, ROWS_PER_PAGE_OPTIONS } from '../../utils/constant';
 import { CustomBox } from '../../styles/Dashboard.styled';
 import { DatePicker } from '@mui/x-date-pickers';
 import CardElement from '../common/CardElement';
-import { Stack } from '@mui/system';
+import LoadingContent from '../common/LoadingContent';
 
 /**
  * DashboardContent Component
  * @return {React.JSX.Element}
  */
-const DashboardContent = (props) => {
-  const {
-    language,
-    setLanguage,
-    dateSelected,
-    setDateSelected,
-    handleSearch,
-    todayFeaturedArticle,
-    previousDaysMostReadArticles,
-    dailyFeaturedImage,
-    page,
-    setPage,
-    rowsPerPage,
-    setRowsPerPage,
-  } = props;
-
-  /**
-   * Render language options
-   */
+const DashboardContent = ({
+  language,
+  setLanguage,
+  dateSelected,
+  setDateSelected,
+  handleSearch,
+  todayFeaturedArticle,
+  previousDaysMostReadArticles,
+  dailyFeaturedImage,
+  page,
+  setPage,
+  rowsPerPage,
+  setRowsPerPage,
+  isLoading,
+}) => {
   const renderLanguageOptions = () =>
-    AVAILABLE_LANGUAGES.map((language) => (
-      <MenuItem key={language.id} value={language.code}>
-        {language.label}
+    AVAILABLE_LANGUAGES.map((lang) => (
+      <MenuItem key={lang.id} value={lang.code}>
+        {lang.label}
       </MenuItem>
     ));
 
-  /**
-   * Render today featured article
-   */
-  const renderTodayFeaturedArticle = () => {
-    if (todayFeaturedArticle) {
-      return <CardElement element={todayFeaturedArticle} properties={['titles.normalized', 'thumbnail', 'extract', 'learn-more']} />;
-    }
-    return <Typography variant='subtitle1'>No featured content available today.</Typography>;
-  };
+  const renderTodayFeaturedArticle = () =>
+    todayFeaturedArticle ? (
+      <CardElement element={todayFeaturedArticle} properties={['titles.normalized', 'thumbnail', 'extract', 'learn-more']} />
+    ) : (
+      <Typography variant='subtitle1'>No featured content available this date.</Typography>
+    );
 
-  /**
-   * Render daily featured image
-   */
-  const renderDailyFeaturedImage = () => {
-    if (dailyFeaturedImage) {
-      return <CardElement element={dailyFeaturedImage} properties={['title', 'thumbnail', 'description.text', 'full-image']} />;
-    }
-    return <Typography variant='subtitle1'>No featured image available today.</Typography>;
-  };
+  const renderDailyFeaturedImage = () =>
+    dailyFeaturedImage ? (
+      <CardElement element={dailyFeaturedImage} properties={['title', 'thumbnail', 'description.text', 'full-image']} />
+    ) : (
+      <Typography variant='subtitle1'>No featured image available this date.</Typography>
+    );
 
-  /**
-   * Render Previous day's most read articles.
-   */
-  const renderPreviousDaysMostReadArticles = () => {
-    if (previousDaysMostReadArticles?.articles) {
-      return previousDaysMostReadArticles?.articles.map((article) => (
-        <Grid2 key={article.tid}>
+  const renderPreviousDaysMostReadArticles = () =>
+    previousDaysMostReadArticles?.articles?.length ? (
+      previousDaysMostReadArticles.articles.map((article) => (
+        <Grid2 item xs={12} sm={6} md={4} key={article.tid}>
           <CardElement element={article} properties={['titles.normalized', 'thumbnail', 'extract', 'learn-more']} />
         </Grid2>
-      ));
-    }
-    return <Typography variant='subtitle1'>No previous days content available today.</Typography>;
-  };
+      ))
+    ) : (
+      <Typography variant='subtitle1'>No previous days content available this date.</Typography>
+    );
 
   return (
-    <>
-      <CustomBox container display='flex' flexDirection='column' alignItems='center' p={2}>
-        <Grid2 container spacing={2} justifyContent='center'>
+    <CustomBox container p={2} spacing={2}>
+      <CustomBox container display='flex' flexDirection='column' alignItems='center' p={2} mt={2}>
+        <Grid2 container spacing={2} justifyContent='center' mb={5}>
           <Grid2 item xs={12}>
             <Typography variant='h4' align='center'>
               Wikipedia - Featured content API
@@ -85,19 +72,13 @@ const DashboardContent = (props) => {
           <Grid2 item xs={12} sm={6} md={4}>
             <FormControl fullWidth>
               <Typography variant='subtitle1'>Language:</Typography>
-              <Select
-                labelId='language-select-label'
-                id='language-select'
-                value={language}
-                onChange={(event) => setLanguage(event.target.value)}
-                inputProps={{ 'aria-label': 'Language' }}
-              >
+              <Select id='language-select' value={language} onChange={(event) => setLanguage(event.target.value)} aria-label='Language'>
                 {renderLanguageOptions()}
               </Select>
             </FormControl>
           </Grid2>
           <Grid2 item xs={12} sm={6} md={4}>
-            <FormControl fullWidth size='small'>
+            <FormControl fullWidth>
               <Typography variant='subtitle1'>Date:</Typography>
               <DatePicker
                 value={dateSelected}
@@ -106,94 +87,94 @@ const DashboardContent = (props) => {
               />
             </FormControl>
           </Grid2>
-          <Grid2 item xs={12} sm={6} md={4} mt={'auto'}>
-            <Button
-              variant='contained'
-              size='large'
-              fullWidth
-              onClick={() => {
-                handleSearch();
-              }}
-            >
+          <Grid2 item xs={12} sm={6} md={4} mt={4}>
+            <Button variant='contained' size='large' fullWidth onClick={handleSearch}>
               Search
             </Button>
           </Grid2>
         </Grid2>
       </CustomBox>
-      <CustomBox container display='flex' flexDirection='row' justifyContent='center' p={2}>
-        <Grid2 item display='flex' flexDirection='column' alignItems='center' p={2}>
-          <Grid2 container spacing={2} justifyContent='center'>
-            <Grid2 item xs={12}>
-              <Typography variant='h4' align='center'>
-                {"Today's featured article"}
-              </Typography>
-            </Grid2>
-          </Grid2>
-          <Grid2 container spacing={2} justifyContent='center' mt={5}>
-            {renderTodayFeaturedArticle()}
-          </Grid2>
-        </Grid2>
-        <Grid2 item display='flex' flexDirection='column' alignItems='center' p={2}>
-          <Grid2 container spacing={2} justifyContent='center'>
-            <Grid2 item xs={12}>
-              <Typography variant='h4' align='center'>
-                {'Daily featured image'}
-              </Typography>
-            </Grid2>
-          </Grid2>
-          <Grid2 container spacing={2} justifyContent='center' mt={5}>
-            {renderDailyFeaturedImage()}
-          </Grid2>
-        </Grid2>
-      </CustomBox>
-      <CustomBox container display='flex' flexDirection='column' alignItems='center' p={2}>
-        <Grid2 container spacing={2} justifyContent='center'>
-          <Grid2 item xs={12}>
-            <Typography variant='h4' align='center'>
-              {"Previous day's most read articles."}
-            </Typography>
-          </Grid2>
-        </Grid2>
-        <Grid2 container spacing={2} justifyContent='center' mt={5}>
-          {renderPreviousDaysMostReadArticles()}
-        </Grid2>
-        {previousDaysMostReadArticles?.count > 0 ? (
-          <Grid2 container spacing={2} justifyContent='center' mt={5}>
-            <Grid2 item xs={12} sm={6} md={4}>
-              <FormControl fullWidth size='small' sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                <Typography variant='subtitle1' sx={{ marginRight: '10px' }}>
-                  Cards per Page:
+      {isLoading ? (
+        <LoadingContent />
+      ) : (
+        <Grid2 container spacing={2}>
+          <Grid2 item xs={12} md={8}>
+            <CustomBox container display='flex' flexDirection='row' justifyContent='center' p={2}>
+              <Grid2 item xs={12} m={10}>
+                <Typography variant='h4' align='center'>
+                  {"Today's Featured Article"}
                 </Typography>
-                <Select
-                  labelId='language-select-label'
-                  id='language-select'
-                  value={rowsPerPage}
-                  onChange={(event) => {
-                    setRowsPerPage(event.target.value);
-                    setPage(1);
-                  }}
-                  inputProps={{ 'aria-label': 'Cards per Page' }}
-                >
-                  <MenuItem value={5}>5</MenuItem>
-                  <MenuItem value={10}>10</MenuItem>
-                  <MenuItem value={15}>15</MenuItem>
-                  <MenuItem value={20}>20</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid2>
-            <Stack>
-              <Pagination
-                count={previousDaysMostReadArticles?.count > 0 ? Math.ceil(previousDaysMostReadArticles.count / rowsPerPage) : 0}
-                page={page}
-                onChange={(event, value) => {
-                  setPage(value);
-                }}
-              />
-            </Stack>
+                <Grid2 container spacing={2} justifyContent='center' mt={2}>
+                  {renderTodayFeaturedArticle()}
+                </Grid2>
+              </Grid2>
+              <Grid2 item xs={12} m={10}>
+                <Typography variant='h4' align='center'>
+                  Daily Featured Image
+                </Typography>
+                <Grid2 container spacing={2} justifyContent='center' mt={2}>
+                  {renderDailyFeaturedImage()}
+                </Grid2>
+              </Grid2>
+            </CustomBox>
           </Grid2>
-        ) : null}
-      </CustomBox>
-    </>
+          <Grid2 item xs={12} md={4}>
+            <CustomBox container display='flex' flexDirection='column' p={2}>
+              <Grid2 item xs={12}>
+                <Typography variant='h4' align='center'>
+                  {"Previous Day's Most Read Articles"}
+                </Typography>
+                <Grid2 container spacing={2} justifyContent='center' mt={2}>
+                  {renderPreviousDaysMostReadArticles()}
+                </Grid2>
+                {previousDaysMostReadArticles?.count > 0 && (
+                  <Grid2
+                    container
+                    spacing={2}
+                    mt={3}
+                    sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    <Grid2 item xs={12} mt={2}>
+                      <FormControl
+                        fullWidth
+                        size='small'
+                        sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
+                      >
+                        <Typography variant='subtitle1' sx={{ marginRight: 2 }}>
+                          Cards per Page:
+                        </Typography>
+                        <Select
+                          value={rowsPerPage}
+                          onChange={(event) => {
+                            setRowsPerPage(event.target.value);
+                            setPage(1);
+                          }}
+                        >
+                          {ROWS_PER_PAGE_OPTIONS.map((value) => (
+                            <MenuItem key={value} value={value}>
+                              {value}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid2>
+                    <Grid2 item xs={12} mt={2}>
+                      <Stack spacing={2} alignItems='center'>
+                        <Pagination
+                          count={Math.ceil(previousDaysMostReadArticles.count / rowsPerPage)}
+                          page={page}
+                          onChange={(event, value) => setPage(value)}
+                        />
+                      </Stack>
+                    </Grid2>
+                  </Grid2>
+                )}
+              </Grid2>
+            </CustomBox>
+          </Grid2>
+        </Grid2>
+      )}
+    </CustomBox>
   );
 };
 
@@ -210,6 +191,7 @@ DashboardContent.propTypes = {
   setPage: PropTypes.func.isRequired,
   rowsPerPage: PropTypes.number.isRequired,
   setRowsPerPage: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
 };
 
 export default DashboardContent;

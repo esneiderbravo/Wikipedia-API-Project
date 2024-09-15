@@ -21,6 +21,7 @@ const DashboardContainer = () => {
   const [dailyFeaturedImage, setDailyFeaturedImage] = useState(null);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (data) {
@@ -39,6 +40,7 @@ const DashboardContainer = () => {
    * */
   const handleSearch = async () => {
     try {
+      setIsLoading(true);
       const [data, status] = await getFeaturedContent(language, dateSelected.format('YYYY/MM/DD'));
       if (status === 200) {
         setData(data);
@@ -48,6 +50,7 @@ const DashboardContainer = () => {
             info: 'Data found with success!',
           }),
         );
+        setIsLoading(false);
       } else {
         dispatch(
           setNotification({
@@ -75,6 +78,7 @@ const DashboardContainer = () => {
       setPage={setPage}
       rowsPerPage={rowsPerPage}
       setRowsPerPage={setRowsPerPage}
+      isLoading={isLoading}
     />
   );
 };
