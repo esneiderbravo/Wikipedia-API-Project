@@ -60,7 +60,7 @@ The project depends on the following libraries:
 1. **Clone the Repository**:
 
    ```bash
-   git clone https://github.com/your-username/full-stack-test.git
+   git clone https://github.com/esneiderbravo/full-stack-test.git
    cd full-stack-test
    ```
 
