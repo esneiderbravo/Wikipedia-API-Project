@@ -7,6 +7,8 @@ import { DatePicker } from '@mui/x-date-pickers';
 import CardElement from '../common/CardElement';
 import LoadingContent from '../common/LoadingContent';
 import { useInView } from 'react-intersection-observer';
+import { Search as SearchIcon } from '@mui/icons-material';
+import commonsLogo from '../../../resources/commons-logo.png';
 
 /**
  * DashboardContent Component
@@ -35,7 +37,7 @@ const DashboardContent = ({
     if (inView && !isLoading) {
       setRowsPerPage(rowsPerPage + 5);
     }
-  }, [inView, isLoading]);
+  }, [inView]);
 
   const renderLanguageOptions = () =>
     AVAILABLE_LANGUAGES.map((lang) => (
@@ -48,14 +50,32 @@ const DashboardContent = ({
     todayFeaturedArticle ? (
       <CardElement element={todayFeaturedArticle} properties={['titles.normalized', 'thumbnail', 'extract', 'learn-more']} />
     ) : (
-      <Typography variant='subtitle1'>No featured content available this date.</Typography>
+      <Typography
+        variant='subtitle1'
+        sx={{
+          fontWeight: 'bold',
+          mb: 4,
+          color: '#333',
+        }}
+      >
+        No featured content available this date.
+      </Typography>
     );
 
   const renderDailyFeaturedImage = () =>
     dailyFeaturedImage ? (
       <CardElement element={dailyFeaturedImage} properties={['title', 'thumbnail', 'description.text', 'full-image']} />
     ) : (
-      <Typography variant='subtitle1'>No featured image available this date.</Typography>
+      <Typography
+        variant='subtitle1'
+        sx={{
+          fontWeight: 'bold',
+          mb: 4,
+          color: '#333',
+        }}
+      >
+        No featured image available this date.
+      </Typography>
     );
 
   const renderPreviousDaysMostReadArticles = () =>
@@ -66,15 +86,33 @@ const DashboardContent = ({
         </Grid2>
       ))
     ) : (
-      <Typography variant='subtitle1'>No previous days content available this date.</Typography>
+      <Typography
+        variant='subtitle1'
+        sx={{
+          fontWeight: 'bold',
+          mb: 4,
+          color: '#333',
+        }}
+      >
+        No previous days content available this date.
+      </Typography>
     );
 
   return (
     <CustomBox container p={2} spacing={2}>
       <CustomBox container display='flex' flexDirection='column' alignItems='center' p={2} mt={2}>
         <Grid2 container spacing={2} justifyContent='center' mb={5}>
-          <Grid2 item xs={12}>
-            <Typography variant='h4' align='center'>
+          <Grid2 item xs={12} display='flex' flexDirection='column' alignItems='center'>
+            <img src={`${commonsLogo}`} alt='commonsLogo' width={120} height={120} />
+            <Typography
+              variant='h4'
+              align='center'
+              sx={{
+                fontWeight: 'bold',
+                mb: 4,
+                color: '#333',
+              }}
+            >
               Wikipedia - Featured content API
             </Typography>
           </Grid2>
@@ -98,8 +136,23 @@ const DashboardContent = ({
               />
             </FormControl>
           </Grid2>
-          <Grid2 item xs={12} sm={6} md={4} mt={4}>
-            <Button variant='contained' size='large' fullWidth onClick={handleSearch}>
+          <Grid2 item xs={12} sm={6} md={4} mt={3.2}>
+            <Button
+              variant='contained'
+              size='large'
+              onClick={handleSearch}
+              startIcon={<SearchIcon />}
+              sx={{
+                backgroundColor: '#00669b',
+                color: '#fff',
+                '&:hover': {
+                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                },
+                borderRadius: '8px',
+                px: 4,
+                py: 2,
+              }}
+            >
               Search
             </Button>
           </Grid2>
@@ -120,7 +173,7 @@ const DashboardContent = ({
               sx={{ flexDirection: { xs: 'column', md: 'row' } }}
             >
               <Grid2 item xs={12} m={10}>
-                <Typography variant='h4' align='center'>
+                <Typography variant='h6' align='center'>
                   {"Today's Featured Article"}
                 </Typography>
                 <Grid2 container spacing={2} justifyContent='center' mt={2}>
@@ -128,7 +181,7 @@ const DashboardContent = ({
                 </Grid2>
               </Grid2>
               <Grid2 item xs={12} m={10}>
-                <Typography variant='h4' align='center'>
+                <Typography variant='h6' align='center'>
                   Daily Featured Image
                 </Typography>
                 <Grid2 container spacing={2} justifyContent='center' mt={2}>
@@ -138,19 +191,14 @@ const DashboardContent = ({
             </CustomBox>
           </Grid2>
           <Grid2 item xs={12} md={4} display='flex' justifyContent='center'>
-            <CustomBox container display='flex' flexDirection='column' p={2}>
+            <CustomBox container display='flex' flexDirection='column' p={2} width='100%'>
               <Grid2 item xs={12}>
-                <Typography variant='h4' align='center'>
-                  {"Previous Day's Most Read Articles"}
-                </Typography>
-                <Grid2 container spacing={2} justifyContent='center' mt={2}>
-                  {renderPreviousDaysMostReadArticles()}
-                </Grid2>
                 {previousDaysMostReadArticles?.count > 0 && (
                   <Grid2
                     container
                     spacing={2}
-                    mt={3}
+                    mt={2}
+                    mb={2}
                     sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
                   >
                     <Grid2 item xs={12} mt={2}>
@@ -188,6 +236,12 @@ const DashboardContent = ({
                     </Grid2>
                   </Grid2>
                 )}
+                <Typography variant='h6' align='center' m={10}>
+                  {"Previous Day's Most Read Articles"}
+                </Typography>
+                <Grid2 container spacing={2} justifyContent='center'>
+                  {renderPreviousDaysMostReadArticles()}
+                </Grid2>
               </Grid2>
               <div ref={loadMoreRef} />
             </CustomBox>

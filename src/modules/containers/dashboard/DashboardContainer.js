@@ -20,7 +20,7 @@ const DashboardContainer = () => {
   const [previousDaysMostReadArticles, setPreviousDaysMostReadArticles] = useState({ articles: [], count: 0 });
   const [dailyFeaturedImage, setDailyFeaturedImage] = useState(null);
   const [page, setPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {

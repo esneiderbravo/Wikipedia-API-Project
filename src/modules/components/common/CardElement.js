@@ -15,15 +15,40 @@ import { Grid2 } from '@mui/material';
 const CardElement = (props) => {
   const { element, properties } = props;
   return (
-    <Card sx={{ minWidth: 250, maxWidth: 250, minHeight: 400, maxHeight: 400, overflowY: 'auto' }}>
+    <Card
+      sx={{
+        minWidth: 250,
+        maxWidth: 250,
+        minHeight: 400,
+        maxHeight: 400,
+        overflowY: 'auto',
+        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+        borderRadius: '8px',
+        p: 2,
+        transition: 'transform 0.3s',
+        '&:hover': {
+          transform: 'scale(1.05)',
+        },
+      }}
+    >
       <CardContent>
         {properties.includes('titles.normalized') && element?.titles ? (
-          <Typography variant='h5' component='div' sx={{ display: 'flex', justifyContent: 'center' }} mb={5}>
+          <Typography
+            variant='h6'
+            component='div'
+            sx={{ display: 'flex', justifyContent: 'center', fontWeight: 'bold', mb: 4, color: '#333' }}
+            mb={5}
+          >
             {element.titles.normalized}
           </Typography>
         ) : null}
         {properties.includes('title') && element?.title ? (
-          <Typography variant='h5' component='div' sx={{ display: 'flex', justifyContent: 'center' }} mb={5}>
+          <Typography
+            variant='h6'
+            component='div'
+            sx={{ display: 'flex', justifyContent: 'center', fontWeight: 'bold', mb: 4, color: '#333' }}
+            mb={5}
+          >
             {element.title}
           </Typography>
         ) : null}
