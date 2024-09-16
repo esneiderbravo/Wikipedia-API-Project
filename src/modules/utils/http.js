@@ -6,18 +6,24 @@ import axios from 'axios';
 class HTTP {
   /**
    * GET request
-   * @param {String} url url to make the request
+   * @param {String} url URL to make the request
+   * @returns {Object} HTTP response or error response
    */
   static async get(url) {
     try {
-      let request = {
-        method: 'get',
-        url,
-      };
-
-      return await axios(request);
+      return await axios.get(url); // Return the successful response object
     } catch (error) {
-      return error;
+      // If error response exists, return it; otherwise, provide a generic error message
+      if (error.response) {
+        // Error from server (response status not 2xx)
+        return error.response;
+      }
+
+      // Network error or request never left (e.g., timeout, no connection)
+      return {
+        data: { error: 'Network error or request failed to send' },
+        status: 500,
+      };
     }
   }
 }

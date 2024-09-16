@@ -21,3 +21,38 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# dependencies
+backend/node_modules
+backend/.pnp
+backend/.pnp.js
+backend/.yarn/install-state.gz
+
+# testing
+backend/coverage
+
+# next.js
+backend/.next/
+backend/out/
+
+# production
+backend/build
+
+# misc
+backend/.DS_Store
+backend/*.pem
+
+# debug
+backend/npm-debug.log*
+backend/yarn-debug.log*
+backend/yarn-error.log*
+
+# local env files
+backend/.env*.local
+
+# vercel
+backend/.vercel
+
+# typescript
+backend/*.tsbuildinfo
+backend/next-env.d.ts
