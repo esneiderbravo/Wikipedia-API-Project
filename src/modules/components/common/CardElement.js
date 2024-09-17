@@ -1,11 +1,9 @@
 import React from 'react';
-import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
-import { CustomImage } from '../../styles/CardElement.styled';
+import { CustomCard, CustomImage } from '../../styles/CardElement.styled';
 import { Grid2 } from '@mui/material';
 
 /**
@@ -15,20 +13,11 @@ import { Grid2 } from '@mui/material';
 const CardElement = (props) => {
   const { element, properties } = props;
   return (
-    <Card
-      sx={{
-        minWidth: 250,
-        maxWidth: 250,
-        minHeight: 400,
-        maxHeight: 400,
-        overflowY: 'auto',
-        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-        borderRadius: '8px',
-        p: 2,
-        transition: 'transform 0.3s',
-        '&:hover': {
-          transform: 'scale(1.05)',
-        },
+    <CustomCard
+      onClick={() => {
+        if (properties.includes('learn-more') && element?.content_urls)
+          window.open(element.content_urls.desktop.page, '_blank', 'noopener,noreferrer');
+        if (properties.includes('full-image') && element?.thumbnail) window.open(element.thumbnail.source, '_blank', 'noopener,noreferrer');
       }}
     >
       <CardContent>
@@ -66,29 +55,8 @@ const CardElement = (props) => {
           <Typography variant='body2'>{element.description.text}</Typography>
         ) : null}
       </CardContent>
-      <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
-        {properties.includes('learn-more') && element?.content_urls ? (
-          <Button
-            size='small'
-            onClick={() => {
-              window.open(element.content_urls.desktop.page, '_blank', 'noopener,noreferrer');
-            }}
-          >
-            Learn More
-          </Button>
-        ) : null}
-        {properties.includes('full-image') && element?.thumbnail ? (
-          <Button
-            size='small'
-            onClick={() => {
-              window.open(element.thumbnail.source, '_blank', 'noopener,noreferrer');
-            }}
-          >
-            Full Image
-          </Button>
-        ) : null}
-      </CardActions>
-    </Card>
+      <CardActions sx={{ display: 'flex', justifyContent: 'center' }}></CardActions>
+    </CustomCard>
   );
 };
 

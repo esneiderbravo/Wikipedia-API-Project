@@ -8,7 +8,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 const familyFont = ['Poppins', 'Maven Pro'].join(',');
 const theme = createTheme({
   body: {
-    width: '1000px',
+    width: '100%',
     height: '100%',
     margin: 0,
     overflowX: 'hidden',

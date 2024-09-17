@@ -1,8 +1,26 @@
 import React, { useEffect } from 'react';
-import { Button, FormControl, MenuItem, Select, Typography, TextField, Grid2, Pagination, Stack } from '@mui/material';
+import {
+  Button,
+  FormControl,
+  MenuItem,
+  Select,
+  Typography,
+  TextField,
+  Grid2,
+  Pagination,
+  Stack,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  FormControlLabel,
+  Switch,
+  FormGroup,
+} from '@mui/material';
 import PropTypes from 'prop-types';
 import { AVAILABLE_LANGUAGES, ROWS_PER_PAGE_OPTIONS } from '../../utils/constant';
-import { CustomBox } from '../../styles/Dashboard.styled';
+import { CustomBox, CustomButton } from '../../styles/Dashboard.styled';
 import { DatePicker } from '@mui/x-date-pickers';
 import CardElement from '../common/CardElement';
 import LoadingContent from '../common/LoadingContent';
@@ -32,6 +50,7 @@ const DashboardContent = ({
   const { ref: loadMoreRef, inView } = useInView({
     threshold: 1.0,
   });
+  const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
     if (inView && !isLoading) {
@@ -98,6 +117,14 @@ const DashboardContent = ({
       </Typography>
     );
 
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   return (
     <CustomBox container p={2} spacing={2}>
       <CustomBox container display='flex' flexDirection='column' alignItems='center' p={2} mt={2}>
@@ -137,24 +164,33 @@ const DashboardContent = ({
             </FormControl>
           </Grid2>
           <Grid2 item xs={12} sm={6} md={4} mt={3.2}>
-            <Button
-              variant='contained'
-              size='large'
-              onClick={handleSearch}
-              startIcon={<SearchIcon />}
-              sx={{
-                backgroundColor: '#00669b',
-                color: '#fff',
-                '&:hover': {
-                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-                },
-                borderRadius: '8px',
-                px: 4,
-                py: 2,
-              }}
-            >
+            <CustomButton variant='outlined' onClick={handleClickOpen}>
+              Config props
+            </CustomButton>
+            <Dialog open={open} onClose={handleClose} aria-labelledby='alert-dialog-title' aria-describedby='alert-dialog-description'>
+              <DialogTitle id='alert-dialog-title'>{'Configure props'}</DialogTitle>
+              <DialogContent>
+                <DialogContentText id='alert-dialog-description'>
+                  <FormGroup>
+                    <FormControlLabel control={<Switch />} label='Label' />
+                    <FormControlLabel control={<Switch />} label='Required' />
+                  </FormGroup>
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Button variant='contained' color='primary' onClick={handleClose} autoFocus>
+                  Save
+                </Button>
+                <Button variant='contained' color='error' onClick={handleClose}>
+                  Cancel
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Grid2>
+          <Grid2 item xs={12} sm={6} md={4} mt={3.2}>
+            <CustomButton variant='contained' size='large' onClick={handleSearch} startIcon={<SearchIcon />}>
               Search
-            </Button>
+            </CustomButton>
           </Grid2>
         </Grid2>
       </CustomBox>

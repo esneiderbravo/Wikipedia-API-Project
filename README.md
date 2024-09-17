@@ -80,6 +80,24 @@ The project depends on the following libraries:
    npm start
    ```
 
+## Docker Setup
+   To run the project using Docker, follow these steps:
+
+1. **Build and Start Services**:
+
+   In the root of the project, run the following command to build and start the frontend and backend services:
+   ```bash
+   docker-compose up --build
+   ````
+
+2. **Access the Application**:
+
+   Once the containers are up and running, the frontend will be available on port 80 and the backend on port 3000.
+
+   Frontend: http://localhost:80
+   
+   Backend: http://localhost:3000
+
 ## Usage
 
 1. **Select Language**: Use the dropdown to select the language of the content.
