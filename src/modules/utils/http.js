@@ -26,6 +26,24 @@ class HTTP {
       };
     }
   }
+
+  /**
+   * POST request
+   * @param {String} url Url to make the request. Ie, 'http://...'
+   * @param {Object} body Data to be created. Ie, {'target': 'en', ...}
+   */
+  static async post(url, body) {
+    try {
+      return await axios({
+        method: 'post',
+        url,
+        headers: { 'Content-Type': 'application/json' },
+        data: body,
+      });
+    } catch (error) {
+      return error;
+    }
+  }
 }
 
 export default HTTP;

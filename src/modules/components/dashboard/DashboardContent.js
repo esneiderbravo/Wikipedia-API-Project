@@ -47,6 +47,7 @@ import commonsLogo from '../../../resources/commons-logo.png';
  * @param {number} props.rowsPerPage - Number of rows displayed per page
  * @param {Function} props.setRowsPerPage - Function to update the number of rows per page
  * @param {boolean} props.isLoading - Flag indicating if content is loading
+ * @param {array} props.languageSupportedList - List with language supported from libre translate API
  *
  * @return {React.JSX.Element} Rendered component
  */
@@ -64,6 +65,7 @@ const DashboardContent = ({
   rowsPerPage,
   setRowsPerPage,
   isLoading,
+  languageSupportedList,
 }) => {
   const { ref: loadMoreRef, inView } = useInView({
     threshold: 1.0,
@@ -115,6 +117,11 @@ const DashboardContent = ({
       selected: false,
       value: ['timestamp'],
     },
+    {
+      label: 'Translate button',
+      selected: false,
+      value: ['translate'],
+    },
   ]);
 
   /**
@@ -133,9 +140,7 @@ const DashboardContent = ({
    * @return {Array} List of extracted selected values
    */
   const extractSelectedValues = (data) => {
-    return data
-      .filter((item) => item.selected) // Filter items where selected is true
-      .flatMap((item) => item.value); // Flatten the values array into a single array
+    return data.filter((item) => item.selected).flatMap((item) => item.value);
   };
 
   /**
@@ -172,7 +177,11 @@ const DashboardContent = ({
    */
   const renderTodayFeaturedArticle = () =>
     todayFeaturedArticle ? (
-      <CardElement element={todayFeaturedArticle} properties={extractSelectedValues(cardPropsConfig)} />
+      <CardElement
+        element={todayFeaturedArticle}
+        properties={extractSelectedValues(cardPropsConfig)}
+        languageSupportedList={languageSupportedList}
+      />
     ) : (
       <Typography
         variant='subtitle1'
@@ -193,7 +202,11 @@ const DashboardContent = ({
    */
   const renderDailyFeaturedImage = () =>
     dailyFeaturedImage ? (
-      <CardElement element={dailyFeaturedImage} properties={extractSelectedValues(cardPropsConfig)} />
+      <CardElement
+        element={dailyFeaturedImage}
+        properties={extractSelectedValues(cardPropsConfig)}
+        languageSupportedList={languageSupportedList}
+      />
     ) : (
       <Typography
         variant='subtitle1'
@@ -216,7 +229,11 @@ const DashboardContent = ({
     previousDaysMostReadArticles?.articles?.length ? (
       previousDaysMostReadArticles.articles.map((article) => (
         <Grid2 item xs={12} sm={6} md={4} key={article.tid}>
-          <CardElement element={article} properties={extractSelectedValues(cardPropsConfig)} />
+          <CardElement
+            element={article}
+            properties={extractSelectedValues(cardPropsConfig)}
+            languageSupportedList={languageSupportedList}
+          />
         </Grid2>
       ))
     ) : (
@@ -435,6 +452,7 @@ DashboardContent.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
   setRowsPerPage: PropTypes.func.isRequired,
   isLoading: PropTypes.bool.isRequired,
+  languageSupportedList: PropTypes.array.isRequired,
 };
 
 export default DashboardContent;

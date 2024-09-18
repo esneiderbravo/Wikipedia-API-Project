@@ -18,4 +18,6 @@ export const AVAILABLE_LANGUAGES = [
   { id: 'fb9140f5-02c7-46c2-97b7-df17f1f650e7', label: 'Vietnamese', code: 'vi' },
 ];
 export const WIKIPEDIA_API = 'https://api.wikimedia.org';
+export const LIBRE_TRANSLATE_API = 'http://localhost:5000/translate';
+
 export const ROWS_PER_PAGE_OPTIONS = [5, 10, 15, 20];

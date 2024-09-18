@@ -6,7 +6,7 @@ The **Full Stack Test** project is a React application designed to display featu
 
 ## Deployed App
 
-You can view the live application at the following link:
+You can view the live application at the following link without translation service:
 
 - [**Full Stack Test - Live Demo**](https://full-stack-test-x667.onrender.com/)
 
@@ -95,14 +95,34 @@ The project depends on the following libraries:
    ```bash
    docker-compose up --build
    ````
+   
+## LibreTranslate
+   The project includes a self-hosted instance of LibreTranslate for machine translation. Follow these steps to run LibreTranslate:
 
-2. **Access the Application**:
+1. **Navigate to the LibreTranslate Directory**:
+
+```bash
+git clone https://github.com/LibreTranslate/LibreTranslate.git
+cd LibreTranslate
+```
+
+2**Run Using Docker Compose**:
+   Ensure Docker is installed on your system. Use Docker Compose to start LibreTranslate:
+
+```bash
+sh run.sh
+```
+   Once running, LibreTranslate will be accessible on its designated port (usually 5000 or as configured in your docker-compose.yml).
+
+3**Access the Application**:
 
    Once the containers are up and running, the frontend will be available on port 80 and the backend on port 3000.
 
    Frontend: http://localhost:80
    
    Backend: http://localhost:3000
+
+   LibreTranslate: http://localhost:5000
 
 ## Usage
 
