@@ -17,6 +17,16 @@ class HTTPHandler {
       return [{ error: 'Failed to make request' }, 500];
     }
   }
+  /**
+   * POST request
+   * @param {String} url Url to make the request. Ie, 'http://...'
+   * @param {Object} body Data to be created. Ie, {'client_id': '123'}
+   */
+  static async post(url, body) {
+    const response = await HTTP.post(url, body);
+
+    return this.handleResponse(response);
+  }
 
   /**
    * Handle HTTP response

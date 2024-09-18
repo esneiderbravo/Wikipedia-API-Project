@@ -1,9 +1,24 @@
 import React, { useState, useEffect } from 'react';
+import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import { CustomCard, CustomImage, StyledStamp } from '../../styles/CardElement.styled';
-import { Grid2 } from '@mui/material';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  FormControl,
+  Grid2,
+  MenuItem,
+  Select,
+} from '@mui/material';
+import { CustomButton } from '../../styles/Dashboard.styled';
+import { setNotification } from '../../actions/state';
+import { translateContentWithLibreTranslate } from '../../services/libreTranslateService';
 
 /**
  * CardElement Component
@@ -15,11 +30,15 @@ import { Grid2 } from '@mui/material';
  * @param {object} props - The component props.
  * @param {object} props.element - The element data for the card.
  * @param {array} props.properties - The list of properties to control what is displayed on the card.
+ * @param {array} props.languageSupportedList - List with language supported from libre translate API
  * @returns {React.JSX.Element} - The rendered card element.
  */
 const CardElement = (props) => {
-  const { element, properties } = props;
+  const { element, properties, languageSupportedList } = props;
   const [isReadElements, setIsReadElements] = useState(JSON.parse(localStorage.getItem('readStatus')) || {});
+  const [open, setOpen] = React.useState(false);
+  const [targetLanguage, setTargetLanguage] = useState('en');
+  const [contentTranslated, setContentTranslated] = useState({});
 
   /**
    * Loads the read status from localStorage on component mount.
@@ -37,42 +56,99 @@ const CardElement = (props) => {
     localStorage.setItem('readStatus', JSON.stringify(isReadElements));
   }, [isReadElements]);
 
+  /**
+   * Handles the click event for the card.
+   * Marks the element as read in localStorage and opens the appropriate link in a new tab.
+   */
+  const handleCardClick = (event) => {
+    if (open) {
+      event.stopPropagation();
+      return;
+    }
+
+    const savedReadStatus = JSON.parse(localStorage.getItem('readStatus')) || {};
+    const tid = element?.tid;
+
+    // Update read status
+    setIsReadElements(() => ({
+      ...savedReadStatus,
+      [tid]: true,
+    }));
+
+    // Open content URL in a new tab if 'learn-more' property exists
+    if (properties.includes('learn-more') && element?.content_urls) {
+      window.open(element.content_urls.desktop.page, '_blank', 'noopener,noreferrer');
+    }
+
+    // Open full image in a new tab if 'full-image' property exists
+    if (properties.includes('full-image') && element?.thumbnail) {
+      window.open(element.thumbnail.source, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  /**
+   * Handles the click event for the translation button.
+   * Stops the click event from propagating to the card.
+   */
+  const handleTranslateButtonClick = (event) => {
+    event.stopPropagation();
+    setOpen(true);
+  };
+
+  /**
+   * Closes the configuration dialog
+   */
+  const handleClose = (event) => {
+    event.stopPropagation();
+    setOpen(false);
+  };
+
+  /**
+   * Closes the configuration dialog
+   */
+  const translateContent = async (event, element) => {
+    event.stopPropagation();
+    const content = element?.extract || element?.description;
+    try {
+      const [data, status] = await translateContentWithLibreTranslate(content, targetLanguage);
+
+      if (status === 200) {
+        setContentTranslated(data);
+      } else {
+        setNotification({
+          type: 'error',
+          info: data.message,
+        });
+      }
+    } catch (error) {
+      console.error('Error getting translating with libre translate API:', error);
+      setNotification({
+        type: 'error',
+        info: 'Error getting translating with libre translate API.',
+      });
+    }
+  };
+
+  /**
+   * Renders available languages options
+   *
+   * @return {React.JSX.Element[]} Array of MenuItem components for language selection
+   */
+  const renderLanguageOptions = () =>
+    languageSupportedList.map((lang) => (
+      <MenuItem key={lang.code} value={lang.code}>
+        {lang.name}
+      </MenuItem>
+    ));
+
   return (
-    <CustomCard
-      /**
-       * Handles the onClick event for the card.
-       * Marks the element as read in localStorage and opens the appropriate link in a new tab.
-       */
-      onClick={() => {
-        const savedReadStatus = JSON.parse(localStorage.getItem('readStatus')) || {};
-        const tid = element?.tid;
-
-        // Update read status
-        setIsReadElements(() => ({
-          ...savedReadStatus,
-          [tid]: true,
-        }));
-
-        // Open content URL in a new tab if 'learn-more' property exists
-        if (properties.includes('learn-more') && element?.content_urls) {
-          window.open(element.content_urls.desktop.page, '_blank', 'noopener,noreferrer');
-        }
-
-        // Open full image in a new tab if 'full-image' property exists
-        if (properties.includes('full-image') && element?.thumbnail) {
-          window.open(element.thumbnail.source, '_blank', 'noopener,noreferrer');
-        }
-      }}
-    >
+    <CustomCard onClick={handleCardClick}>
       <CardContent>
-        {/* Displays a 'Read' stamp if the element has been marked as read */}
         {!!isReadElements[element?.tid] && (
           <StyledStamp>
             <Typography variant='caption'>Read</Typography>
           </StyledStamp>
         )}
-
-        {/* Conditional rendering based on properties */}
         {properties.includes('titles.normalized') && element?.titles ? (
           <Typography
             variant='h6'
@@ -141,6 +217,57 @@ const CardElement = (props) => {
           </Typography>
         ) : null}
       </CardContent>
+      <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
+        {properties.includes('translate') ? (
+          <Grid2 item xs={12} sm={6} md={4} mt={3.2}>
+            <CustomButton variant='outlined' onClick={handleTranslateButtonClick}>
+              Translate Extract
+            </CustomButton>
+            <Dialog open={open} onClose={handleClose} aria-labelledby='alert-dialog-title' aria-describedby='alert-dialog-description'>
+              <DialogTitle id='alert-dialog-title'>{'Translate'}</DialogTitle>
+              <DialogContent>
+                <DialogContentText id='alert-dialog-description'>
+                  <Grid2 item xs={12} sm={6} md={4} mb={4}>
+                    <FormControl fullWidth>
+                      <Typography variant='subtitle1'>Language:</Typography>
+                      <Select
+                        id='language-select'
+                        value={targetLanguage}
+                        onChange={(event) => {
+                          event.stopPropagation();
+                          setTargetLanguage(event.target.value);
+                        }}
+                        aria-label='Language'
+                      >
+                        {renderLanguageOptions()}
+                      </Select>
+                    </FormControl>
+                  </Grid2>
+                  <Grid2 item xs={12} sm={6} md={4}>
+                    <FormControl fullWidth>
+                      {contentTranslated ? (
+                        <Typography variant='body2' sx={{ textAlign: 'justify' }}>
+                          {contentTranslated.translatedText}
+                        </Typography>
+                      ) : (
+                        ''
+                      )}
+                    </FormControl>
+                  </Grid2>
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
+                <Button variant='contained' color='success' onClick={(event) => translateContent(event, element)}>
+                  Translate
+                </Button>
+                <Button variant='contained' color='error' onClick={handleClose}>
+                  Close
+                </Button>
+              </DialogActions>
+            </Dialog>
+          </Grid2>
+        ) : null}
+      </CardActions>
     </CustomCard>
   );
 };
@@ -148,6 +275,7 @@ const CardElement = (props) => {
 CardElement.propTypes = {
   element: PropTypes.object.isRequired,
   properties: PropTypes.array.isRequired,
+  languageSupportedList: PropTypes.array.isRequired,
 };
 
 export default CardElement;
