@@ -22,3 +22,16 @@ export const CustomCard = styled(Card)`
     transform: scale(1.05);
   }
 `;
+
+export const StyledStamp = styled('div')`
+  top: 10px;
+  left: 10px;
+  background-color: #ff5722;
+  color: #fff;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  width: 35px;
+`;
