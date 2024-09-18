@@ -4,6 +4,12 @@
 
 The **Full Stack Test** project is a React application designed to display featured content from Wikipedia, including today's featured article, daily featured image, and the previous day's most read articles. It utilizes Material UI for styling and includes functionalities like date selection, language filtering, and infinite scrolling.
 
+## Deployed App
+
+You can view the live application at the following link:
+
+- [**Full Stack Test - Live Demo**](https://full-stack-test-x667.onrender.com/)
+
 ## Features
 
 - **Today's Featured Article**: Displays an article featured for the current date.
@@ -106,12 +112,6 @@ The project depends on the following libraries:
 4. **Scroll**: Infinite scrolling will load more articles as you scroll down.
 5. **Pagination**: Use pagination controls to navigate through the articles.
 
-## Deployed App
-
-You can view the live application at the following link:
-
-- [**Full Stack Test - Live Demo**](https://full-stack-test-x667.onrender.com/)
-
 ## Scripts
 
 - **Start**: `npm start` - Starts the development server.
@@ -159,6 +159,41 @@ Prettier configuration is located in `.prettierrc`:
 
 ESLint configuration is located in `.eslintrc.js`:
 
+```js
+module.exports = {
+  root: true,
+  parserOptions: {
+    ecmaVersion: 2020,
+    sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true
+    }
+  },
+  settings: {
+    react: {
+      version: 'detect'
+    }
+  },
+  env: {
+    jest: true,
+    browser: true,
+    amd: true,
+    node: true
+  },
+  extends: [
+    'eslint:recommended',
+    'plugin:react/recommended',
+    'plugin:prettier/recommended' // Make this the last element so prettier config overrides other formatting rules
+  ],
+  rules: {
+    'no-unused-vars': ['warn', { vars: 'all', args: 'after-used', ignoreRestSiblings: false, argsIgnorePattern: '^_' }],
+    'prettier/prettier': ['error', {}, { usePrettierrc: true }]
+  }
+}
+```
+
+## Repository Configuration
+   The repository has the following branch protection rules configured:
 ```js
 module.exports = {
   root: true,
