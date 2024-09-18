@@ -30,7 +30,25 @@ import commonsLogo from '../../../resources/commons-logo.png';
 
 /**
  * DashboardContent Component
- * @return {React.JSX.Element}
+ * Displays the main content for the dashboard, including language selection,
+ * date picker, featured articles, and pagination for previous day's most read articles.
+ *
+ * @param {Object} props - Component props
+ * @param {string} props.language - Currently selected language code
+ * @param {Function} props.setLanguage - Function to update the selected language
+ * @param {Date} props.dateSelected - Currently selected date
+ * @param {Function} props.setDateSelected - Function to update the selected date
+ * @param {Function} props.handleSearch - Function to trigger search
+ * @param {Object} props.todayFeaturedArticle - Data for today's featured article
+ * @param {Object} props.previousDaysMostReadArticles - Data for previous day's most read articles
+ * @param {Object} props.dailyFeaturedImage - Data for today's featured image
+ * @param {number} props.page - Current page number for pagination
+ * @param {Function} props.setPage - Function to update the current page number
+ * @param {number} props.rowsPerPage - Number of rows displayed per page
+ * @param {Function} props.setRowsPerPage - Function to update the number of rows per page
+ * @param {boolean} props.isLoading - Flag indicating if content is loading
+ *
+ * @return {React.JSX.Element} Rendered component
  */
 const DashboardContent = ({
   language,
@@ -51,13 +69,95 @@ const DashboardContent = ({
     threshold: 1.0,
   });
   const [open, setOpen] = React.useState(false);
+  const [cardPropsConfig, setCardPropsConfig] = React.useState([
+    {
+      label: 'Title',
+      selected: true,
+      value: ['titles.normalized'],
+    },
+    {
+      label: 'Tumbnail',
+      selected: true,
+      value: ['thumbnail'],
+    },
+    {
+      label: 'Extract',
+      selected: true,
+      value: ['extract', 'description.text'],
+    },
+    {
+      label: 'Activate click event',
+      selected: true,
+      value: ['learn-more', 'full-image'],
+    },
+    {
+      label: 'Views',
+      selected: false,
+      value: ['views'],
+    },
+    {
+      label: 'Rank',
+      selected: false,
+      value: ['rank'],
+    },
+    {
+      label: 'Language',
+      selected: false,
+      value: ['lang'],
+    },
+    {
+      label: 'Revision',
+      selected: false,
+      value: ['revision'],
+    },
+    {
+      label: 'Timestamp',
+      selected: false,
+      value: ['timestamp'],
+    },
+  ]);
 
+  /**
+   * Handles the change in view and updates rows per page if in view
+   */
   useEffect(() => {
     if (inView && !isLoading) {
       setRowsPerPage(rowsPerPage + 5);
     }
   }, [inView]);
 
+  /**
+   * Extracts the selected values from card properties configuration
+   *
+   * @param {Array} data - Array of card properties configuration
+   * @return {Array} List of extracted selected values
+   */
+  const extractSelectedValues = (data) => {
+    return data
+      .filter((item) => item.selected) // Filter items where selected is true
+      .flatMap((item) => item.value); // Flatten the values array into a single array
+  };
+
+  /**
+   * Updates the card configuration state by modifying the 'selected' property of the item
+   * that matches the label of the new configuration. The updated item will replace the
+   * corresponding item in the state array.
+   *
+   * @param {Object} newConfig - The new configuration object to update the card properties.
+   * @param {string} newConfig.label - The label of the item to be updated.
+   * @param {boolean} newConfig.selected - The new value for the 'selected' property.
+   */
+  const updateCardPropsConfig = (newConfig) => {
+    setCardPropsConfig((prevConfig) =>
+      prevConfig.map((item) => (item.label === newConfig.label ? { ...item, selected: newConfig.selected } : item)),
+    );
+  };
+
+  /**
+   * Renders language selection options
+   *
+   * @return {React.JSX.Element[]} Array of MenuItem components for language selection
+   */
   const renderLanguageOptions = () =>
     AVAILABLE_LANGUAGES.map((lang) => (
       <MenuItem key={lang.id} value={lang.code}>
@@ -65,9 +165,14 @@ const DashboardContent = ({
       </MenuItem>
     ));
 
+  /**
+   * Renders the featured article for today
+   *
+   * @return {React.JSX.Element} Rendered CardElement or a message if no content is available
+   */
   const renderTodayFeaturedArticle = () =>
     todayFeaturedArticle ? (
-      <CardElement element={todayFeaturedArticle} properties={['titles.normalized', 'thumbnail', 'extract', 'learn-more']} />
+      <CardElement element={todayFeaturedArticle} properties={extractSelectedValues(cardPropsConfig)} />
     ) : (
       <Typography
         variant='subtitle1'
@@ -81,9 +186,14 @@ const DashboardContent = ({
       </Typography>
     );
 
+  /**
+   * Renders the featured image for today
+   *
+   * @return {React.JSX.Element} Rendered CardElement or a message if no content is available
+   */
   const renderDailyFeaturedImage = () =>
     dailyFeaturedImage ? (
-      <CardElement element={dailyFeaturedImage} properties={['title', 'thumbnail', 'description.text', 'full-image']} />
+      <CardElement element={dailyFeaturedImage} properties={extractSelectedValues(cardPropsConfig)} />
     ) : (
       <Typography
         variant='subtitle1'
@@ -97,11 +207,16 @@ const DashboardContent = ({
       </Typography>
     );
 
+  /**
+   * Renders the most read articles from the previous days
+   *
+   * @return {React.JSX.Element} Array of CardElement components or a message if no articles are available
+   */
   const renderPreviousDaysMostReadArticles = () =>
     previousDaysMostReadArticles?.articles?.length ? (
       previousDaysMostReadArticles.articles.map((article) => (
         <Grid2 item xs={12} sm={6} md={4} key={article.tid}>
-          <CardElement element={article} properties={['titles.normalized', 'thumbnail', 'extract', 'learn-more']} />
+          <CardElement element={article} properties={extractSelectedValues(cardPropsConfig)} />
         </Grid2>
       ))
     ) : (
@@ -117,17 +232,23 @@ const DashboardContent = ({
       </Typography>
     );
 
+  /**
+   * Opens the configuration dialog
+   */
   const handleClickOpen = () => {
     setOpen(true);
   };
 
+  /**
+   * Closes the configuration dialog
+   */
   const handleClose = () => {
     setOpen(false);
   };
 
   return (
     <CustomBox container p={2} spacing={2}>
-      <CustomBox container display='flex' flexDirection='column' alignItems='center' p={2} mt={2}>
+      <CustomBox container display='flex' flexDirection='column' alignItems='center' p={2} mt={2} mb={2}>
         <Grid2 container spacing={2} justifyContent='center' mb={5}>
           <Grid2 item xs={12} display='flex' flexDirection='column' alignItems='center'>
             <img src={`${commonsLogo}`} alt='commonsLogo' width={120} height={120} />
@@ -172,17 +293,29 @@ const DashboardContent = ({
               <DialogContent>
                 <DialogContentText id='alert-dialog-description'>
                   <FormGroup>
-                    <FormControlLabel control={<Switch />} label='Label' />
-                    <FormControlLabel control={<Switch />} label='Required' />
+                    {cardPropsConfig.map((cardProp) => (
+                      <FormControlLabel
+                        key={cardProp.label}
+                        control={
+                          <Switch
+                            checked={cardProp.selected}
+                            onChange={() =>
+                              updateCardPropsConfig({
+                                label: cardProp.label,
+                                selected: !cardProp.selected,
+                              })
+                            }
+                          />
+                        }
+                        label={cardProp.label}
+                      />
+                    ))}
                   </FormGroup>
                 </DialogContentText>
               </DialogContent>
-              <DialogActions>
-                <Button variant='contained' color='primary' onClick={handleClose} autoFocus>
-                  Save
-                </Button>
+              <DialogActions sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center' }}>
                 <Button variant='contained' color='error' onClick={handleClose}>
-                  Cancel
+                  Close
                 </Button>
               </DialogActions>
             </Dialog>
