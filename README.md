@@ -1,4 +1,4 @@
-# Full Stack Test
+# Wikipedia API Project
 
 ## Overview
 
